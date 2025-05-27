@@ -219,8 +219,8 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             host = headers.get('host', [{'value': ''}])[0]['value']
             
             # Configuration
-            RECAPTCHA_SECRET_KEY = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
-            ALLOWED_CIDRS = ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']
+            RECAPTCHA_SECRET_KEY = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'  # change this to your secret key from Google. This key is a demo key for testing from Google
+            ALLOWED_CIDRS = ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']  # exempt from cookie 
             
             # Initialize WAF token manager
             waf_token_manager = WAFTokenManager()
