@@ -118,7 +118,7 @@ graph TB
 
 ## Implementation Notes
 
-- The solution uses Google reCAPTCHA instead of AWS WAF CAPTCHA
+- The solution uses Google reCAPTCHA for customer who wish to use an external reCAPTCHA
 - Cookies are set with appropriate security attributes
 - The architecture can be adapted to use other CAPTCHA providers
-- The solution includes proper error handling and user feedback
+- The solution includes proper error handling
