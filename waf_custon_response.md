@@ -1,4 +1,6 @@
-## CAPTCHA Challenge Page  ### note change `https://xxxxxxx.cloudfront.net to match yours`
+## CAPTCHA Challenge Page  
+
+#### note change https://xxxxxxx.cloudfront.net to match yours
 
 The CAPTCHA challenge page contains the HTML, CSS, and JavaScript needed to:
 
