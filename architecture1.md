@@ -14,25 +14,25 @@ graph TB
     LambdaServe[Lambda serve_html.py]
     Google[Google reCAPTCHA]
     
-    User -->|1. Request| CF
-    CF -->|2. Check| WAF1
+    User -->|1- Request| CF
+    CF -->|2- Check| WAF1
     WAF1 -->|3a. No Cookies| User
     WAF1 -->|3b. Has Cookies| CF
     
-    CF -->|4. Forward| APIGW
-    APIGW -->|5. Check| WAF2
-    APIGW -->|6. Apply| RP
+    CF -->|4- Forward| APIGW
+    APIGW -->|5- Check| WAF2
+    APIGW -->|6- Apply| RP
     
-    APIGW -->|7a. verify-captcha| LambdaVerify
-    APIGW -->|7b. serve-html-api| LambdaServe
+    APIGW -->|7a- verify-captcha| LambdaVerify
+    APIGW -->|7b- serve-html-api| LambdaServe
     
-    LambdaVerify -->|8. Verify| Google
-    Google -->|9. Result| LambdaVerify
+    LambdaVerify -->|8- Verify| Google
+    Google -->|9- Result| LambdaVerify
     
-    LambdaVerify -->|10. Set Cookies| APIGW
-    LambdaServe -->|11. Serve Content| APIGW
-    APIGW -->|12. Response| CF
-    CF -->|13. Response| User
+    LambdaVerify -->|10- Set Cookies| APIGW
+    LambdaServe -->|11- Serve Content| APIGW
+    APIGW -->|12- Response| CF
+    CF -->|13- Response| User
     
     subgraph CFBehaviors[CloudFront Behaviors]
         B1[verify-captcha]
