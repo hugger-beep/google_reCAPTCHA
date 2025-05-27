@@ -1,3 +1,20 @@
+## CAPTCHA Challenge Page
+
+The CAPTCHA challenge page contains the HTML, CSS, and JavaScript needed to:
+
+1. Display the Google reCAPTCHA challenge
+2. Verify the CAPTCHA token with the backend
+3. Set cookies for authenticated access
+4. Redirect to the protected content
+
+Key implementation details:
+- Uses Google reCAPTCHA v2
+- Sends verification requests to `/verify-captcha` endpoint
+- Dynamically builds redirect URLs using the URL constructor
+- Includes error handling and user feedback
+
+
+
 // one change replace the cloudfront domain 
 
 ``` text
