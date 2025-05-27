@@ -96,7 +96,7 @@ graph TB
 7. **Lambda Functions**:
    - `verify_captcha.py`: Verifies reCAPTCHA tokens with Google's API and sets cookies
    - `serve_html.py`: Serves protected content after verifying cookies
-   - `favicon.py : serves fake favicon.ico
+   - `favicon.py` : serves fake favicon.ico
 8. **Google reCAPTCHA**: Verifies CAPTCHA tokens submitted by users
 9. **Response Flow**:
    - After successful verification, cookies are set and user is redirected
