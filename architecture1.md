@@ -83,11 +83,11 @@ graph TB
    - If cookies are missing, serves the Google reCAPTCHA challenge page
    - If cookies are present, allows the request to proceed
 4. **CloudFront Behaviors**:
-   - Routes /favicon.ico to API Gateway -> Lambda (favicon.py)
-   - Routes `/verify-captcha` to API Gateway
-   - Routes `/serve-html-api` to API Gateway
-   - Routes `/index.html` to API Gateway
-   - Default route serves the CAPTCHA challenge page
+   - Routes /favicon.ico to API Gateway -> Lambda (favicon.py) - Priority 0
+   - Routes `/verify-captcha` to API Gateway - Priority 1
+   - Routes `/index.html` to API Gateway - Priority 2
+   - Routes `/serve-html-api` to API Gateway - Priority 3
+   - Default route - Priority 4
 6. **API Gateway**:
    - Receives requests from CloudFront
    - Routes to appropriate Lambda functions based on path
