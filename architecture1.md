@@ -83,20 +83,21 @@ graph TB
    - If cookies are missing, serves the Google reCAPTCHA challenge page
    - If cookies are present, allows the request to proceed
 4. **CloudFront Behaviors**:
+   - Routes /favicon.ico to API Gateway -> Lambda (favicon.py)
    - Routes `/verify-captcha` to API Gateway
    - Routes `/serve-html-api` to API Gateway
    - Routes `/index.html` to API Gateway
    - Default route serves the CAPTCHA challenge page
-5. **API Gateway**:
+6. **API Gateway**:
    - Receives requests from CloudFront
    - Routes to appropriate Lambda functions based on path
    - Protected by Resource Policy (allows only CloudFront and specific IPs)
    - Protected by second AWS WAF
-6. **Lambda Functions**:
+7. **Lambda Functions**:
    - `verify_captcha.py`: Verifies reCAPTCHA tokens with Google's API and sets cookies
    - `serve_html.py`: Serves protected content after verifying cookies
-7. **Google reCAPTCHA**: Verifies CAPTCHA tokens submitted by users
-8. **Response Flow**:
+8. **Google reCAPTCHA**: Verifies CAPTCHA tokens submitted by users
+9. **Response Flow**:
    - After successful verification, cookies are set and user is redirected
    - Protected content is served to authenticated users
 
