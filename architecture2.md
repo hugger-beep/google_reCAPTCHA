@@ -75,75 +75,70 @@ graph TB
 ## Architecture Components Diagram
 
 ```mermaid
-flowchart TB
-    %% Define styles
-    classDef cloudfront fill:#FF9900,stroke:#333,stroke-width:2px,color:white
-    classDef waf fill:#3B48CC,stroke:#333,stroke-width:2px,color:white
-    classDef apigateway fill:#E7157B,stroke:#333,stroke-width:2px,color:white
-    classDef lambda fill:#009900,stroke:#333,stroke-width:2px,color:white
-    classDef policy fill:#232F3E,stroke:#333,stroke-width:2px,color:white
+
+graph TB
+    User((User))
+    CF[CloudFront]
+    WAF1[WAF]
+    APIGW[API Gateway]
+    WAF2[WAF]
+    RP[Policy]
+    LV[Lambda1]
+    LS[Lambda2]
+    Google[reCAPTCHA]
     
-    %% Define main components
-    CF[CloudFront Distribution]:::cloudfront
-    WAF1[AWS WAF]:::waf
-    APIGW[API Gateway]:::apigateway
-    WAF2[AWS WAF]:::waf
-    RP[Resource Policy]:::policy
+    User --> CF
+    CF --> WAF1
+    WAF1 --> User
+    WAF1 --> CF
     
-    %% Define Lambda functions
-    LambdaVerify[Lambda@Edge\nverify_captcha.py]:::lambda
-    LambdaServe[Lambda\nserve_html.py]:::lambda
+    CF --> APIGW
+    APIGW --> WAF2
+    APIGW --> RP
     
-    %% Define CloudFront behaviors
-    subgraph CFBehaviors[CloudFront Behaviors]
-        direction TB
-        B1["/verify-captcha\n→ API Gateway"]
-        B2["/serve-html-api\n→ API Gateway"]
-        B3["/index.html\n→ API Gateway"]
-        B4["/ (Default)\n→ Custom Error Page"]
+    APIGW --> LV
+    APIGW --> LS
+    
+    LV --> Google
+    Google --> LV
+    
+    LV --> APIGW
+    LS --> APIGW
+    APIGW --> CF
+    CF --> User
+    
+    subgraph CFB[CloudFront]
+        B1[Path1]
+        B2[Path2]
     end
     
-    %% Define API Gateway paths
-    subgraph APIPaths[API Gateway Paths]
-        direction TB
-        P1["/verify-captcha\n→ Lambda"]
-        P2["/serve-html-api\n→ Lambda"]
-        P3["/index.html\n→ Lambda"]
-        P4["/waf-captcha-verification\n→ Lambda"]
+    subgraph API[API Paths]
+        P1[Path1]
+        P2[Path2]
     end
     
-    %% Define WAF rules
-    subgraph WAFRules[WAF Rules]
-        direction TB
-        R1["Check for Cookies:\n- aws-waf-token=true\n- captcha_verified=true"]
-        R2["If No Cookies:\nServe CAPTCHA Page"]
+    subgraph Rules[WAF Rules]
+        R1[Rule1]
+        R2[Rule2]
     end
     
-    %% Define Resource Policy
-    subgraph ResourcePolicy[Resource Policy]
-        direction TB
-        RP1["Allow: CloudFront IPs"]
-        RP2["Allow: Specific IPs"]
-        RP3["Deny: All Others"]
-    end
+    CF -.-> CFB
+    APIGW -.-> API
+    WAF1 -.-> Rules
     
-    %% Connect components
-    CF --- WAF1
-    CF --- APIGW
-    APIGW --- WAF2
-    APIGW --- RP
-    APIGW --- LambdaVerify
-    APIGW --- LambdaServe
-    
-    %% Connect subgraphs
-    CF -.-> CFBehaviors
-    APIGW -.-> APIPaths
-    WAF1 -.-> WAFRules
-    RP -.-> ResourcePolicy
-    
-    %% Apply styles
-    classDef subgraph fill:#f5f5f5,stroke:#333,stroke-width:1px
-    class CFBehaviors,APIPaths,WAFRules,ResourcePolicy subgraph
+    style User fill:#f9f
+    style CF fill:#FF9900
+    style WAF1 fill:#3B48CC
+    style WAF2 fill:#3B48CC
+    style APIGW fill:#E7157B
+    style LV fill:#009900
+    style LS fill:#009900
+    style Google fill:#4285F4
+    style RP fill:#232F3E
+    style CFB fill:#f5f5f5
+    style API fill:#f5f5f5
+    style Rules fill:#f5f5f5
+
 ```
 
 ## Detailed Flow
