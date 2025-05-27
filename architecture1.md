@@ -2,29 +2,19 @@
 
 ## Architecture Diagram
 
+
 ```mermaid
 graph TB
-    %% Define styles
-    classDef user fill:#f9f,stroke:#333,stroke-width:2px
-    classDef cloudfront fill:#FF9900,stroke:#333,stroke-width:2px,color:white
-    classDef waf fill:#3B48CC,stroke:#333,stroke-width:2px,color:white
-    classDef apigateway fill:#E7157B,stroke:#333,stroke-width:2px,color:white
-    classDef lambda fill:#009900,stroke:#333,stroke-width:2px,color:white
-    classDef google fill:#4285F4,stroke:#333,stroke-width:2px,color:white
-    classDef policy fill:#232F3E,stroke:#333,stroke-width:2px,color:white
+    User((User))
+    CF[CloudFront Distribution]
+    WAF1[AWS WAF]
+    APIGW[API Gateway]
+    WAF2[AWS WAF]
+    RP[Resource Policy]
+    LambdaVerify[Lambda verify_captcha.py]
+    LambdaServe[Lambda serve_html.py]
+    Google[Google reCAPTCHA]
     
-    %% Define nodes
-    User((User)):::user
-    CF[CloudFront Distribution]:::cloudfront
-    WAF1[AWS WAF]:::waf
-    APIGW[API Gateway]:::apigateway
-    WAF2[AWS WAF]:::waf
-    RP[Resource Policy]:::policy
-    LambdaVerify[Lambda verify_captcha.py]:::lambda
-    LambdaServe[Lambda serve_html.py]:::lambda
-    Google[Google reCAPTCHA]:::google
-    
-    %% Define connections
     User -->|1. Request| CF
     CF -->|2. Check| WAF1
     WAF1 -->|3a. No Cookies| User
@@ -45,7 +35,6 @@ graph TB
     APIGW -->|12. Response| CF
     CF -->|13. Response| User
     
-    %% Define subgraphs
     subgraph CFBehaviors[CloudFront Behaviors]
         B1[verify-captcha]
         B2[serve-html-api]
@@ -65,14 +54,22 @@ graph TB
         R2[Serve CAPTCHA]
     end
     
-    %% Connect subgraphs
     CF -.-> CFBehaviors
     APIGW -.-> APIPaths
     WAF1 -.-> WAFRules
     
-    %% Apply styles
-    classDef subgraph fill:#f5f5f5,stroke:#333,stroke-width:1px
-    class CFBehaviors,APIPaths,WAFRules subgraph
+    style User fill:#f9f,stroke:#333
+    style CF fill:#FF9900,stroke:#333,color:white
+    style WAF1 fill:#3B48CC,stroke:#333,color:white
+    style WAF2 fill:#3B48CC,stroke:#333,color:white
+    style APIGW fill:#E7157B,stroke:#333,color:white
+    style LambdaVerify fill:#009900,stroke:#333,color:white
+    style LambdaServe fill:#009900,stroke:#333,color:white
+    style Google fill:#4285F4,stroke:#333,color:white
+    style RP fill:#232F3E,stroke:#333,color:white
+    style CFBehaviors fill:#f5f5f5,stroke:#333
+    style APIPaths fill:#f5f5f5,stroke:#333
+    style WAFRules fill:#f5f5f5,stroke:#333
 ```
 ``` mermaid
 
