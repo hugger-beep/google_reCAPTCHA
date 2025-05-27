@@ -2,45 +2,74 @@
 
 ## User Flow Diagram
 
-```mermaid
-flowchart LR
-    %% Define styles
-    classDef user fill:#f9f,stroke:#333,stroke-width:2px
-    classDef cloudfront fill:#FF9900,stroke:#333,stroke-width:2px,color:white
-    classDef waf fill:#3B48CC,stroke:#333,stroke-width:2px,color:white
-    classDef apigateway fill:#E7157B,stroke:#333,stroke-width:2px,color:white
-    classDef lambda fill:#009900,stroke:#333,stroke-width:2px,color:white
-    classDef google fill:#4285F4,stroke:#333,stroke-width:2px,color:white
+``` mermaid
+
+graph TB
+    User((User))
+    CF[CloudFront Distribution]
+    WAF1[AWS WAF]
+    APIGW[API Gateway]
+    WAF2[AWS WAF]
+    RP[Resource Policy]
+    LambdaVerify[Lambda verify_captcha.py]
+    LambdaServe[Lambda serve_html.py]
+    Google[Google reCAPTCHA]
     
-    %% Define nodes
-    User((User)):::user
-    CF[CloudFront\nDistribution]:::cloudfront
-    WAF1[AWS WAF]:::waf
-    APIGW[API Gateway]:::apigateway
-    LambdaVerify[Lambda@Edge\nverify_captcha.py]:::lambda
-    LambdaServe[Lambda\nserve_html.py]:::lambda
-    Google[Google reCAPTCHA\nVerification]:::google
+    User -->|1- Request| CF
+    CF -->|2- Check| WAF1
+    WAF1 -->|3a- No Cookies| User
+    WAF1 -->|3b- Has Cookies| CF
     
-    %% Define connections - Initial Request
-    User -->|1- Request Protected\nContent| CF
-    CF -->|2- Check Request| WAF1
-    WAF1 -->|3a- No Cookies:\nServe CAPTCHA Page| User
+    CF -->|4- Forward| APIGW
+    APIGW -->|5- Check| WAF2
+    APIGW -->|6- Apply| RP
     
-    %% Define connections - CAPTCHA Verification
-    User -->|4- Submit CAPTCHA| CF
-    CF -->|5- Forward to\n/verify-captcha| APIGW
-    APIGW -->|6- Invoke Lambda| LambdaVerify
-    LambdaVerify -->|7- Verify Token| Google
-    Google -->|8- Verification Result| LambdaVerify
-    LambdaVerify -->|9- Set Cookies &\nRedirect| User
+    APIGW -->|7a- verify-captcha| LambdaVerify
+    APIGW -->|7b- serve-html-api| LambdaServe
     
-    %% Define connections - Authenticated Access
-    User -->|10- Request with Cookies| CF
-    CF -->|11- Check Request| WAF1
-    WAF1 -->|12- Has Cookies:\nAllow Request| CF
-    CF -->|13- Forward to\n/serve-html-api| APIGW
-    APIGW -->|14- Invoke Lambda| LambdaServe
-    LambdaServe -->|15- Serve Protected\nContent| User
+    LambdaVerify -->|8- Verify| Google
+    Google -->|9- Result| LambdaVerify
+    
+    LambdaVerify -->|10- Set Cookies| APIGW
+    LambdaServe -->|11- Serve Content| APIGW
+    APIGW -->|12- Response| CF
+    CF -->|13- Response| User
+    
+    subgraph CFBehaviors[CloudFront Behaviors]
+        B1[verify-captcha]
+        B2[serve-html-api]
+        B3[index.html]
+        B4[Default]
+    end
+    
+    subgraph APIPaths[API Gateway Paths]
+        P1[verify-captcha]
+        P2[serve-html-api]
+        P3[index.html]
+        P4[waf-captcha-verification]
+    end
+    
+    subgraph WAFRules[WAF Rules]
+        R1[Check Cookies]
+        R2[Serve CAPTCHA]
+    end
+    
+    CF -.-> CFBehaviors
+    APIGW -.-> APIPaths
+    WAF1 -.-> WAFRules
+    
+    style User fill:#f9f,stroke:#333
+    style CF fill:#FF9900,stroke:#333,color:white
+    style WAF1 fill:#3B48CC,stroke:#333,color:white
+    style WAF2 fill:#3B48CC,stroke:#333,color:white
+    style APIGW fill:#E7157B,stroke:#333,color:white
+    style LambdaVerify fill:#009900,stroke:#333,color:white
+    style LambdaServe fill:#009900,stroke:#333,color:white
+    style Google fill:#4285F4,stroke:#333,color:white
+    style RP fill:#232F3E,stroke:#333,color:white
+    style CFBehaviors fill:#f5f5f5,stroke:#333
+    style APIPaths fill:#f5f5f5,stroke:#333
+    style WAFRules fill:#f5f5f5,stroke:#333
 ```
 
 ## Architecture Components Diagram
