@@ -3,8 +3,7 @@
 ## Architecture Diagram
 
 ```mermaid
-
-flowchart TB
+graph TB
     %% Define styles
     classDef user fill:#f9f,stroke:#333,stroke-width:2px
     classDef cloudfront fill:#FF9900,stroke:#333,stroke-width:2px,color:white
@@ -21,62 +20,50 @@ flowchart TB
     APIGW[API Gateway]:::apigateway
     WAF2[AWS WAF]:::waf
     RP[Resource Policy]:::policy
-    
-    %% Define Lambda functions
-    LambdaVerify[Lambda@Edge\nverify_captcha.py]:::lambda
-    LambdaServe[Lambda\nserve_html.py]:::lambda
-    
-    %% Define Google reCAPTCHA
-    Google[Google reCAPTCHA\nVerification Service]:::google
-    
-    %% Define CloudFront behaviors
-    subgraph CFBehaviors[CloudFront Behaviors]
-        direction TB
-        B1["/verify-captcha\n→ API Gateway"]
-        B2["/serve-html-api\n→ API Gateway"]
-        B3["/index.html\n→ API Gateway"]
-        B4["/ (Default)\n→ Custom Error Page"]
-    end
-    
-    %% Define API Gateway paths
-    subgraph APIPaths[API Gateway Paths]
-        direction TB
-        P1["/verify-captcha\n→ Lambda"]
-        P2["/serve-html-api\n→ Lambda"]
-        P3["/index.html\n→ Lambda"]
-        P4["/waf-captcha-verification\n→ Lambda"]
-    end
-    
-    %% Define WAF rules
-    subgraph WAFRules[WAF Rules]
-        direction TB
-        R1["Check for Cookies:\n- aws-waf-token=true\n- captcha_verified=true"]
-        R2["If No Cookies:\nServe CAPTCHA Page"]
-    end
+    LambdaVerify[Lambda verify_captcha.py]:::lambda
+    LambdaServe[Lambda serve_html.py]:::lambda
+    Google[Google reCAPTCHA]:::google
     
     %% Define connections
-    User -->|1. Request Protected Content| CF
-    CF -->|2. Check Request| WAF1
+    User -->|1. Request| CF
+    CF -->|2. Check| WAF1
     WAF1 -->|3a. No Cookies| User
     WAF1 -->|3b. Has Cookies| CF
     
-    CF -->|4. Forward Request| APIGW
-    APIGW -->|5. Check Request| WAF2
+    CF -->|4. Forward| APIGW
+    APIGW -->|5. Check| WAF2
     APIGW -->|6. Apply| RP
     
-    %% API Gateway to Lambda connections
-    APIGW -->|7a. /verify-captcha| LambdaVerify
-    APIGW -->|7b. /serve-html-api| LambdaServe
+    APIGW -->|7a. verify-captcha| LambdaVerify
+    APIGW -->|7b. serve-html-api| LambdaServe
     
-    %% Lambda to Google connection
-    LambdaVerify -->|8. Verify Token| Google
-    Google -->|9. Verification Result| LambdaVerify
+    LambdaVerify -->|8. Verify| Google
+    Google -->|9. Result| LambdaVerify
     
-    %% Response flow
-    LambdaVerify -->|10. Set Cookies & Redirect| APIGW
-    LambdaServe -->|11. Serve Protected Content| APIGW
+    LambdaVerify -->|10. Set Cookies| APIGW
+    LambdaServe -->|11. Serve Content| APIGW
     APIGW -->|12. Response| CF
-    CF -->|13. Response to User| User
+    CF -->|13. Response| User
+    
+    %% Define subgraphs
+    subgraph CFBehaviors[CloudFront Behaviors]
+        B1[verify-captcha]
+        B2[serve-html-api]
+        B3[index.html]
+        B4[Default]
+    end
+    
+    subgraph APIPaths[API Gateway Paths]
+        P1[verify-captcha]
+        P2[serve-html-api]
+        P3[index.html]
+        P4[waf-captcha-verification]
+    end
+    
+    subgraph WAFRules[WAF Rules]
+        R1[Check Cookies]
+        R2[Serve CAPTCHA]
+    end
     
     %% Connect subgraphs
     CF -.-> CFBehaviors
