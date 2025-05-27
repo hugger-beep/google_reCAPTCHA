@@ -15,6 +15,35 @@ Key implementation details:
 
 
 
+The CAPTCHA challenge page contains the following key components:
+
+1. **HTML Structure**:
+   - A form with reCAPTCHA widget
+   - Submit button (disabled until CAPTCHA is completed)
+   - Error and loading message elements
+
+2. **JavaScript Functions**:
+   - `onloadCallback`: Initializes the reCAPTCHA widget
+   - `onSubmit`: Enables the submit button when CAPTCHA is completed
+   - Form submission handler: Sends the token to the verification endpoint
+   - Redirect logic: Constructs the URL and redirects after verification
+
+3. **Key Code Snippet**:
+   ```javascript
+   // Redirect logic after successful verification
+   if(d.success) {
+     document.getElementById('l').textContent = 'Verification successful! Redirecting...';
+     
+     // Force the path to be /serve-html-api regardless of what the server returns
+     let redirectUrl = new URL('/serve-html-api', window.location.origin).href;
+     
+     // Add a delay to ensure cookies are set
+     setTimeout(function() {
+       window.location.href = redirectUrl;
+     }, 1000);
+   }
+
+
 // one change replace the cloudfront domain 
 
 ``` text
