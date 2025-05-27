@@ -1,6 +1,4 @@
 
-``` python
-
 import json
 import base64
 import secrets
@@ -450,5 +448,3 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         # Return a generic error response
         return create_error_response('500', 'Internal Server Error')
 
-
-```
