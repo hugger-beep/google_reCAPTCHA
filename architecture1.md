@@ -2,7 +2,6 @@
 
 ## Architecture Diagram
 
-
 ```mermaid
 graph TB
     User((User))
@@ -71,6 +70,8 @@ graph TB
     style APIPaths fill:#f5f5f5,stroke:#333
     style WAFRules fill:#f5f5f5,stroke:#333
 ```
+
+
 ``` mermaid
 
 graph TB
