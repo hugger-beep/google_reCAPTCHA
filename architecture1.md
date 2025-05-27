@@ -73,79 +73,7 @@ graph TB
 
 
 
-``` mermaid
 
-graph TB
-    %% Define styles
-    classDef user fill:#f9f,stroke:#333,stroke-width:2px
-    classDef cloudfront fill:#FF9900,stroke:#333,stroke-width:2px,color:white
-    classDef waf fill:#3B48CC,stroke:#333,stroke-width:2px,color:white
-    classDef apigateway fill:#E7157B,stroke:#333,stroke-width:2px,color:white
-    classDef lambda fill:#009900,stroke:#333,stroke-width:2px,color:white
-    classDef google fill:#4285F4,stroke:#333,stroke-width:2px,color:white
-    classDef policy fill:#232F3E,stroke:#333,stroke-width:2px,color:white
-    classDef subgraphstyle fill:#f5f5f5,stroke:#333,stroke-width:1px
-    
-    %% Define nodes
-    User((User)):::user
-    CF[CloudFront Distribution]:::cloudfront
-    WAF1[AWS WAF]:::waf
-    APIGW[API Gateway]:::apigateway
-    WAF2[AWS WAF]:::waf
-    RP[Resource Policy]:::policy
-    LambdaVerify[Lambda verify_captcha.py]:::lambda
-    LambdaServe[Lambda serve_html.py]:::lambda
-    Google[Google reCAPTCHA]:::google
-    
-    %% Define connections
-    User -->|1. Request| CF
-    CF -->|2. Check| WAF1
-    WAF1 -->|3a. No Cookies| User
-    WAF1 -->|3b. Has Cookies| CF
-    
-    CF -->|4. Forward| APIGW
-    APIGW -->|5. Check| WAF2
-    APIGW -->|6. Apply| RP
-    
-    APIGW -->|7a. verify-captcha| LambdaVerify
-    APIGW -->|7b. serve-html-api| LambdaServe
-    
-    LambdaVerify -->|8. Verify| Google
-    Google -->|9. Result| LambdaVerify
-    
-    LambdaVerify -->|10. Set Cookies| APIGW
-    LambdaServe -->|11. Serve Content| APIGW
-    APIGW -->|12. Response| CF
-    CF -->|13. Response| User
-    
-    %% Define subgraphs
-    subgraph CFBehaviors[CloudFront Behaviors]
-        B1[verify-captcha]
-        B2[serve-html-api]
-        B3[index.html]
-        B4[Default]
-    end
-    
-    subgraph APIPaths[API Gateway Paths]
-        P1[verify-captcha]
-        P2[serve-html-api]
-        P3[index.html]
-        P4[waf-captcha-verification]
-    end
-    
-    subgraph WAFRules[WAF Rules]
-        R1[Check Cookies]
-        R2[Serve CAPTCHA]
-    end
-    
-    %% Connect subgraphs
-    CF -.-> CFBehaviors
-    APIGW -.-> APIPaths
-    WAF1 -.-> WAFRules
-    
-    %% Apply styles to subgraphs
-    class CFBehaviors,APIPaths,WAFRules subgraphstyle
-```
 ## Detailed Flow
 
 1. **User Request**: User attempts to access protected content
