@@ -159,28 +159,7 @@ graph TB
 
 3. **Authenticated Access**:
    - User is redirected with cookies set
-   - CloudFront forwards the new request to WAF
-   - WAF checks for cookies and allows the request
+   - WAF intercepts and checks for cookies and allows the request `(if cookies are present)`
    - CloudFront forwards to API Gateway based on the path
    - API Gateway invokes the appropriate Lambda function
    - `serve_html.py` verifies cookies again and serves protected content
-
-## Security Measures
-
-1. **Dual WAF Protection**:
-   - WAF at CloudFront level for initial cookie verification
-   - WAF at API Gateway level for additional protection
-
-2. **Resource Policy**:
-   - Restricts API Gateway access to CloudFront and specific IPs
-   - Prevents direct access to API Gateway endpoints
-
-3. **Cookie Verification**:
-   - Both WAF and Lambda functions verify the presence of required cookies
-   - Cookies are set with secure attributes
-
-4. **Custom Headers**:
-   - CloudFront adds custom headers for API Gateway authorization
-
-5. **HTTPS Throughout**:
-   - All communications use HTTPS for encryption
