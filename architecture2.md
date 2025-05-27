@@ -22,25 +22,25 @@ flowchart LR
     Google[Google reCAPTCHA\nVerification]:::google
     
     %% Define connections - Initial Request
-    User -->|1. Request Protected\nContent| CF
-    CF -->|2. Check Request| WAF1
-    WAF1 -->|3a. No Cookies:\nServe CAPTCHA Page| User
+    User -->|1- Request Protected\nContent| CF
+    CF -->|2- Check Request| WAF1
+    WAF1 -->|3a- No Cookies:\nServe CAPTCHA Page| User
     
     %% Define connections - CAPTCHA Verification
-    User -->|4. Submit CAPTCHA| CF
-    CF -->|5. Forward to\n/verify-captcha| APIGW
-    APIGW -->|6. Invoke Lambda| LambdaVerify
-    LambdaVerify -->|7. Verify Token| Google
-    Google -->|8. Verification Result| LambdaVerify
-    LambdaVerify -->|9. Set Cookies &\nRedirect| User
+    User -->|4- Submit CAPTCHA| CF
+    CF -->|5- Forward to\n/verify-captcha| APIGW
+    APIGW -->|6- Invoke Lambda| LambdaVerify
+    LambdaVerify -->|7- Verify Token| Google
+    Google -->|8- Verification Result| LambdaVerify
+    LambdaVerify -->|9- Set Cookies &\nRedirect| User
     
     %% Define connections - Authenticated Access
-    User -->|10. Request with Cookies| CF
-    CF -->|11. Check Request| WAF1
-    WAF1 -->|12. Has Cookies:\nAllow Request| CF
-    CF -->|13. Forward to\n/serve-html-api| APIGW
-    APIGW -->|14. Invoke Lambda| LambdaServe
-    LambdaServe -->|15. Serve Protected\nContent| User
+    User -->|10- Request with Cookies| CF
+    CF -->|11- Check Request| WAF1
+    WAF1 -->|12- Has Cookies:\nAllow Request| CF
+    CF -->|13- Forward to\n/serve-html-api| APIGW
+    APIGW -->|14- Invoke Lambda| LambdaServe
+    LambdaServe -->|15- Serve Protected\nContent| User
 ```
 
 ## Architecture Components Diagram
