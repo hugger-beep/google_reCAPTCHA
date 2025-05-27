@@ -3,6 +3,7 @@
 ## Architecture Diagram
 
 ```mermaid
+
 flowchart TB
     %% Define styles
     classDef user fill:#f9f,stroke:#333,stroke-width:2px
