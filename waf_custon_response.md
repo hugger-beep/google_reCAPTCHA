@@ -1,3 +1,7 @@
+
+![Architecture Diagram](https://github.com/hugger-beep/google_reCAPTCHA/blob/main/reCAPTCHA.PNG)
+
+
 ## CAPTCHA Challenge Page  
 
 #### note change https://xxxxxxx.cloudfront.net to match yours
