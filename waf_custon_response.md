@@ -59,7 +59,7 @@ The CAPTCHA challenge page contains the following key components:
   document.getElementById('l').style.display='block';
   document.getElementById('s').disabled=true;
 
-// `replace below with your cloudfront domain`
+// replace below with your cloudfront domain
 
   fetch('https://xxxxxxx.cloudfront.net/verify-captcha',{
     method:'POST',
