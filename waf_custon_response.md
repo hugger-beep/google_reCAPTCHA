@@ -13,8 +13,7 @@ Key implementation details:
 - Uses Google reCAPTCHA v2
 - Sends verification requests to `/verify-captcha` endpoint
 - Dynamically builds redirect URLs using the URL constructor
-- Includes error handling and user feedback
-
+- Includes error handling
 
 
 The CAPTCHA challenge page contains the following key components:
