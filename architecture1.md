@@ -97,7 +97,7 @@ graph TB
    - `verify_captcha.py`: Verifies reCAPTCHA tokens with Google's API and sets cookies
    - `serve_html.py`: Serves protected content after verifying cookies
    - `favicon.py` : serves fake favicon.ico
-8. **Google reCAPTCHA**: Verifies CAPTCHA tokens submitted by users
+8. **Google reCAPTCHA**: Verifies CAPTCHA tokens submitted by users - google provides a test `site key and secret key`
 9. **Response Flow**:
    - After successful verification, cookies are set and user is redirected
    - Protected content is served to authenticated users
