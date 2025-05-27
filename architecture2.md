@@ -1,4 +1,4 @@
-# AWS WAF with Google reCAPTCHA Architecture (Split Diagram)
+# AWS WAF with Google reCAPTCHA Architecture
 
 ## User Flow Diagram
 
